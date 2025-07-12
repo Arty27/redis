@@ -53,6 +53,32 @@ async function redisDataStructures() {
     const isNickName = await client.sIsMember("user:nickName", "genius"); // 0 for false, 1 for true
     await client.sRem("user:nickName", "genius");
     console.log(isNickName, await client.sMembers("user:nickName"));
+
+    // Sorted sets -> zAdd, zRange, zRem, zRank
+    await client.zAdd("cart", [
+      { score: 100, value: "Cart1" },
+      { score: 150, value: "Cart2" },
+      { score: 10, value: "Cart3" },
+      { score: 200, value: "Cart4" },
+    ]);
+    const getCartItems = await client.zRange("cart", 0, -1);
+    console.log(getCartItems);
+    const getItemsWithScore = await client.zRangeWithScores("cart", 0, -1);
+    console.log(getItemsWithScore);
+
+    const cartTwoRank = await client.zRank("cart", "Cart3");
+    console.log(cartTwoRank);
+
+    // Hashes -> hSet, hGet, hGetAll, hDel
+    await client.hSet("cricket:1", {
+      name: "Jasprith Bumrah",
+      descr: "Right Hand Fast Bowler",
+      rating: "5",
+    });
+    const getC = await client.hGet("cricket:1", "rating");
+    console.log(getC);
+    const getAllProperties = await client.hGetAll("cricket:1");
+    console.log(getAllProperties);
   } catch (error) {
     console.log("Error occured", error);
   } finally {
