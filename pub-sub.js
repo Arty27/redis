@@ -12,25 +12,25 @@ client.on("error", (error) =>
 async function testAdditionalFeatures() {
   try {
     await client.connect();
-    // const subscriber = client.duplicate(); // create a new client -> shares same connection
-    // await subscriber.connect(); // connect to redis server for the subscriber
+    const subscriber = client.duplicate(); // create a new client -> shares same connection
+    await subscriber.connect(); // connect to redis server for the subscriber
 
-    // await subscriber.subscribe("demo-channel", (message, channel) => {
-    //   console.log(`Recieved Message from ${channel}:${message}`);
-    // });
+    await subscriber.subscribe("demo-channel", (message, channel) => {
+      console.log(`Recieved Message from ${channel}:${message}`);
+    });
 
-    // // publish message to the demo channel
-    // await client.publish(
-    //   "demo-channel",
-    //   "Thank you for subscribing to my channel"
-    // );
-    // await client.publish(
-    //   "demo-channel",
-    //   "Press the bell icon for notifications"
-    // );
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
-    // await subscriber.unsubscribe("demo-channel");
-    // await subscriber.quit();
+    // publish message to the demo channel
+    await client.publish(
+      "demo-channel",
+      "Thank you for subscribing to my channel"
+    );
+    await client.publish(
+      "demo-channel",
+      "Press the bell icon for notifications"
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await subscriber.unsubscribe("demo-channel");
+    await subscriber.quit();
 
     // pipelining and transactions
     const multi = client.multi();
